@@ -12,35 +12,36 @@ import Image from "next/image";
 import { PlayIcon, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import axios from "axios";
-
 import React, { useEffect, useState } from "react";
 
-export const Nowplaying = () => {
-  type MovieTypes = {
-    adult: boolean;
-    backdrop_path: string | null;
-    genre_ids: number[];
-    id: number;
-    original_language: string;
-    original_title: string;
-    overview: string;
-    popularity: number;
-    poster_path: string | null;
-    release_date: string;
-    title: string;
-    video: boolean;
-    vote_average: number;
-    vote_count: number;
-  };
+type MovieTypes = {
+  adult: boolean;
+  backdrop_path: string | null;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string | null;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
 
-  const [upcomingMovieData, setUpcomingMovieData] = useState<MovieTypes[]>([]);
+export const Nowplaying = () => {
+  const [nowPlayingMovieData, setNowPlayingMovieData] = useState<MovieTypes[]>(
+    []
+  );
 
   useEffect(() => {
     axios
       .get(
         "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
       )
-      .then((res) => setUpcomingMovieData(res.data.results || []))
+      .then((res) => setNowPlayingMovieData(res.data.results || []))
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
@@ -48,7 +49,7 @@ export const Nowplaying = () => {
     <div className="relative w-screen">
       <Carousel>
         <CarouselContent>
-          {upcomingMovieData?.slice(0, 3).map((item, index) => (
+          {nowPlayingMovieData?.slice(0, 3).map((item, index) => (
             <CarouselItem key={index} className="relative w-screen p-0">
               <div className="relative w-screen h-[800px]">
                 {/* Description */}
@@ -83,11 +84,7 @@ export const Nowplaying = () => {
                 {/* Description end */}
 
                 <Image
-                  src={
-                    item.poster_path
-                      ? `https://image.tmdb.org/t/p/original${item.poster_path}`
-                      : "/placeholder.jpg"
-                  }
+                  src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
                   alt={`${item.title} Poster`}
                   fill
                   className="object-cover brightness-50"

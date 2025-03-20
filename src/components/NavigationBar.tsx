@@ -1,8 +1,41 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Moon, Search } from "lucide-react";
+// import { ArrowDown, ArrowRight, Moon, Search } from "lucide-react";
+
+import * as dropdownMenu from "@/components/ui/dropdown-menu";
+
+import { Badge } from "@/components/ui/badge";
+import { SetStateAction, useEffect, useState } from "react";
+import axios from "axios";
+
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "./ui/input";
+import { ArrowDown, ArrowRight, Moon, Search } from "lucide-react";
+
+type movieGenresType = {
+  id: number;
+  name: string;
+  event: string;
+};
 
 export const NavigationBar = () => {
+  const [movieGenres, setmovieGenres] = useState<movieGenresType[]>([]);
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://api.themoviedb.org/3/genre/movie/list?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
+      )
+      .then((res) => setmovieGenres(res.data.genres || []))
+      .catch((err) => console.error("Error fetching movies:", err));
+  }, []);
+
   return (
     <div className="flex h-[59px] w-full">
       <div className="flex items-center px-4 justify-between w-full">
@@ -24,18 +57,39 @@ export const NavigationBar = () => {
           <p className="text-[16px] text-[#4338CA] font-bold">Movie Z</p>
         </div>
         <div className="flex gap-3 items-center">
-          <Button className="bg-white text-black text-[14px] font-medium flex items-center gap-2 border px-4 py-2">
-            <ArrowDown />
-            Genre
-          </Button>
+          <dropdownMenu.DropdownMenu>
+            <dropdownMenu.DropdownMenuTrigger className="bg-white text-black text-[14px] rounded-[6px] font-medium flex items-center gap-2 border px-4 py-2">
+              <ArrowDown />
+              Genre
+            </dropdownMenu.DropdownMenuTrigger>
+            <dropdownMenu.DropdownMenuContent className="w-[577px] p-10">
+              <dropdownMenu.DropdownMenuLabel className="text-[24px] font-semibold">
+                Genres
+              </dropdownMenu.DropdownMenuLabel>
+              <dropdownMenu.DropdownMenuLabel className="text-[16px] font-normal">
+                See lists of movies by genre
+              </dropdownMenu.DropdownMenuLabel>
+              <dropdownMenu.DropdownMenuSeparator />
+              <div className="flex gap-4 pt-4 w-full flex-wrap">
+                {movieGenres.map((value) => (
+                  <Badge key={value.id} variant="outline">
+                    {value.name} <ArrowRight />{" "}
+                  </Badge>
+                ))}
+              </div>
+            </dropdownMenu.DropdownMenuContent>
+          </dropdownMenu.DropdownMenu>
+
           <div className="flex items-center px-3 py-2 border rounded-[8px] w-[355px] gap-2.5">
             <Search className="stroke-1" />
-            <Input
+            <input
+              onChange={handleInputChange}
               placeholder="Search..."
               className="border-none shadow-none p-0 h-[20px]"
             />
           </div>
         </div>
+
         <div className="border w-[36px] h-[36px] flex items-center justify-center rounded-[10px]">
           <Moon className="stroke-1" />
         </div>
