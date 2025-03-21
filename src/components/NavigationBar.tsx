@@ -16,16 +16,22 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "./ui/input";
 import { ArrowDown, ArrowRight, Moon, Search } from "lucide-react";
+import { SearchMovie } from "./SearchMovie";
+import { Separator } from "./ui/separator";
 
 type movieGenresType = {
   id: number;
   name: string;
-  event: string;
 };
 
 export const NavigationBar = () => {
   const [movieGenres, setmovieGenres] = useState<movieGenresType[]>([]);
-  const [inputValue, setInputValue] = useState("");
+
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const handleInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
 
   useEffect(() => {
     axios
@@ -80,13 +86,16 @@ export const NavigationBar = () => {
             </dropdownMenu.DropdownMenuContent>
           </dropdownMenu.DropdownMenu>
 
-          <div className="flex items-center px-3 py-2 border rounded-[8px] w-[355px] gap-2.5">
+          <div className="flex items-center px-3 py-2 border rounded-[8px] w-[355px] gap-2.5 focus:border-pink-600 focus:ring-0 ">
             <Search className="stroke-1" />
             <input
-              onChange={handleInputChange}
+              onChange={handleInputValue}
               placeholder="Search..."
-              className="border-none shadow-none p-0 h-[20px]"
+              className="border-none shadow-none p-0 h-[20px] outline-none focus:ring-0"
             />
+          </div>
+          <div className="flex flex-col h-fit w-fit absolute top-[100px] z-40 p-3 bg-white rounded-[8px]">
+            <SearchMovie inputValue={inputValue} />
           </div>
         </div>
 
