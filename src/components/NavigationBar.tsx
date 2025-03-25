@@ -50,7 +50,7 @@ export const NavigationBar = () => {
       <div className="flex items-center px-4 justify-between w-full">
         <div
           className="flex gap-2 items-center cursor-pointer"
-          onClick={() => router.push("/w")}
+          onClick={() => router.push("/")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

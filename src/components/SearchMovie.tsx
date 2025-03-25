@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { Separator } from "./ui/separator";
+import { useRouter } from "next/navigation";
 
 type MovieTypes = {
   adult: boolean;
@@ -27,19 +28,30 @@ type MovieTypes = {
 export const SearchMovie = ({ inputValue }: { inputValue: string }) => {
   const [movieGenres, setmovieGenres] = useState<MovieTypes[]>([]);
 
+  const router = useRouter();
+
+  const handleOnclick = (id: number) => {
+    router.push(`/details/${id}`);
+  };
+
   useEffect(() => {
+    if (inputValue.trim() === "") {
+      setmovieGenres([]);
+      return;
+    }
+
     axios
       .get(
         `https://api.themoviedb.org/3/search/movie?query=${inputValue}&language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
       .then((res) => setmovieGenres(res.data.results || []))
       .catch((err) => console.error("Error fetching movies:", err));
-  }, []);
+  }, [inputValue]);
 
   return (
     <div className="w-fit h-fit ">
-      {movieGenres.map((value, index) => (
-        <div key={index}>
+      {movieGenres.slice(0, 5).map((value, index) => (
+        <div key={value.id}>
           <div className="w-[537px] p-2 rounded-[8px] flex gap-4 bg-white h-fit">
             <Image
               src={`https://image.tmdb.org/t/p/original${value.poster_path}`}
@@ -62,8 +74,11 @@ export const SearchMovie = ({ inputValue }: { inputValue: string }) => {
                 </div>
               </div>
               <div className="flex justify-between w-full">
-                <p className="text-[14px] font-medium">2024</p>
-                <Button className="bg-transparent shadow-none text-black border-none">
+                <p className="text-[14px] font-medium">{value.release_date}</p>
+                <Button
+                  className="bg-transparent shadow-none text-black border-none"
+                  onClick={() => handleOnclick(value.id)}
+                >
                   See more <ArrowRight />
                 </Button>
               </div>
