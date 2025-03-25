@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { MovieCard } from "./MovieCard";
+import { useRouter } from "next/navigation";
 
 export const Upcoming = () => {
   type MovieTypes = {
     adult: boolean;
     backdrop_path: string | null;
     genre_ids: number[];
-    id: number;
+    id: string;
     original_language: string;
     original_title: string;
     overview: string;
@@ -28,6 +29,12 @@ export const Upcoming = () => {
   const [nowPlayingMovieData, setNowPlayingMovieData] = useState<MovieTypes[]>(
     []
   );
+
+  const router = useRouter();
+
+  const handleOnclick = (id: string) => {
+    router.push(`/details/${id}`);
+  };
 
   useEffect(() => {
     axios
@@ -52,6 +59,8 @@ export const Upcoming = () => {
         {" "}
         {nowPlayingMovieData.slice(0, 10).map((value, index) => (
           <MovieCard
+            className=""
+            onClick={() => handleOnclick(value.id)}
             key={index}
             title={value.title}
             vote_average={value.vote_average}

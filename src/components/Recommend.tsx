@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { MovieCard } from "./MovieCard";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type MovieTypes = {
   adult: boolean;
@@ -25,10 +25,11 @@ type MovieTypes = {
   vote_count: number;
 };
 
-export const Popular = () => {
+export const Recommend = () => {
   const [nowPlayingMovieData, setNowPlayingMovieData] = useState<MovieTypes[]>(
     []
   );
+  const params = useParams();
 
   const router = useRouter();
 
@@ -39,27 +40,28 @@ export const Popular = () => {
   useEffect(() => {
     axios
       .get(
-        "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
+        `https://api.themoviedb.org/3/movie/${params.id}/similar?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
       .then((res) => setNowPlayingMovieData(res.data.results || []))
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
+  console.log(nowPlayingMovieData, "recommend");
+
   return (
-    <div className="w-full flex flex-col gap-[32px] px-[80px]">
+    <div className="w-full flex flex-col gap-[32px] ">
       <div className="flex justify-between w-full">
-        <p className="text-[24px] font-semibold">Popular</p>
+        <p className="text-[24px] font-semibold">TopRated</p>
         <Button className="bg-transparent text-black border-none shadow-none">
           See more
           <ArrowRight />
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-[32px]">
-        {" "}
-        {nowPlayingMovieData.slice(0, 10).map((value, index) => (
+      <div className="flex flex-wrap gap-[32px] ">
+        {nowPlayingMovieData.slice(0, 5).map((value, index) => (
           <MovieCard
-            className=""
+            className="!w-[190px] !min-h-[372px]  "
             onClick={() => handleOnclick(value.id)}
             key={index}
             title={value.title}
