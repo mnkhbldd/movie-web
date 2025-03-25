@@ -7,17 +7,19 @@ export const MovieCard = ({
   poster_path,
   onClick,
   className,
+  isSmall,
 }: {
   title: string;
   vote_average: number;
   poster_path: string | null;
   onClick: () => void;
   className: string;
+  isSmall: boolean;
 }) => {
   return (
     <div
       className={
-        `flex flex-col w-[230px] min-h-[439px] h-fit bg-gray-200 rounded-[8px] ` +
+        `flex flex-col w-[230px] min-h-[439px] h-fit bg-gray-200 rounded-[8px] cursor-pointer ` +
         className
       }
       onClick={onClick}
@@ -37,9 +39,15 @@ export const MovieCard = ({
             <span className="text-[#71717A] text-[12px] font-normal">/10</span>
           </p>
         </div>
-        <p className="text-[18px]">
-          {title.length > 43 ? title.slice(0, 43) + "..." : title}
-        </p>
+        {isSmall ? (
+          <p className="text-[18px]">
+            {title.length > 43 ? title.slice(0, 43) + "..." : title}
+          </p>
+        ) : (
+          <p className="text-[18px]">
+            {title.length > 43 ? title.slice(0, 40) + "..." : title}
+          </p>
+        )}
       </div>
     </div>
   );

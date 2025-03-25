@@ -73,16 +73,14 @@ export const MovieCrew = () => {
       <div className="flex flex-col gap-1">
         <div className="flex gap-[53px]">
           <p className="text-[16px] font-bold  w-[64px]">Writers</p>
-          {Similiar?.crew?.slice(0, 10).map((value: any, index: number) => {
-            if (value.known_for_department === "Writing") {
-              return (
-                <p key={index} className="text-[14px]">
-                  {value.name}
-                </p>
-              );
-            }
-            return null;
-          })}
+          {Similiar?.crew
+            ?.filter((value: any) => value.known_for_department === "Writing")
+            .slice(0, 5)
+            .map((value: any, index: number) => (
+              <p key={index} className="text-[14px]">
+                {value.name}
+              </p>
+            ))}
         </div>
         <Separator />
       </div>
@@ -90,16 +88,14 @@ export const MovieCrew = () => {
         <div className="flex gap-[53px]">
           <p className="text-[16px] font-bold  w-[64px]">Stars</p>
 
-          {Similiar?.crew?.map((value: any, index: number) => {
-            if (value.known_for_department === "Acting") {
-              return (
-                <p key={index} className="text-[14px]">
-                  {value.name}
-                </p>
-              );
-            }
-            return null;
-          })}
+          {Similiar?.crew
+            ?.filter((value: any) => value.known_for_department === "Acting")
+            .slice(0, 5)
+            .map((value: any, index: number) => (
+              <p key={index} className="text-[14px]">
+                {value.name}
+              </p>
+            ))}
         </div>
         <Separator />
       </div>

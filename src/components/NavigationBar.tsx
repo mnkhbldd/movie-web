@@ -18,6 +18,7 @@ import { Input } from "./ui/input";
 import { ArrowDown, ArrowRight, Moon, Search } from "lucide-react";
 import { SearchMovie } from "./SearchMovie";
 import { Separator } from "./ui/separator";
+import { useRouter } from "next/navigation";
 
 type movieGenresType = {
   id: number;
@@ -33,6 +34,8 @@ export const NavigationBar = () => {
     setInputValue(event.target.value);
   };
 
+  const router = useRouter();
+
   useEffect(() => {
     axios
       .get(
@@ -45,7 +48,10 @@ export const NavigationBar = () => {
   return (
     <div className="flex h-[59px] w-full">
       <div className="flex items-center px-4 justify-between w-full">
-        <div className="flex gap-2 items-center">
+        <div
+          className="flex gap-2 items-center cursor-pointer"
+          onClick={() => router.push("/w")}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"

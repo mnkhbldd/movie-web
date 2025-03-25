@@ -11,6 +11,14 @@ import { ArrowRight, PlayIcon, Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type MovieTypes = {
   adult: boolean;
@@ -30,10 +38,24 @@ type MovieTypes = {
   genres: { id: number; name: string }[];
 };
 
+type TrainerTypes = {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+};
+
 function Detail() {
   const params = useParams();
 
   const [Similiar, setSimiliar] = useState<MovieTypes | null>(null);
+  const [Trailer, setTrailer] = useState<TrainerTypes[]>([]);
 
   const router = useRouter();
 
@@ -50,8 +72,19 @@ function Detail() {
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${params.id}/videos?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+      )
+      .then((res) => setTrailer(res.data.results || []))
+      .catch((err) => console.error("Error fetching movies:", err));
+  }, []);
+
+  console.log(Trailer);
+
   return (
-    <div className="w-screen flex flex-col items-center">
+    <div className="w-screen flex flex-col items-center py-[52px]">
       <div className="flex flex-col gap-[32px] w-[1080px]">
         <div className="flex w-full justify-between">
           <div className="flex flex-col">
@@ -94,9 +127,29 @@ function Detail() {
               className="!static rounded-[8px] !h-[428px]"
             />
             <div className="flex gap-3 absolute bottom-[24px] left-[24px] items-center ">
-              <Button className="rounded-full bg-white">
-                <PlayIcon className="text-black" />
-              </Button>
+              <Dialog>
+                <DialogTrigger className=" bg-white px-2 py-2 rounded-full">
+                  <PlayIcon />
+                </DialogTrigger>
+                <DialogContent className="!w-[993px] !max-w-6xl h-auto !p-0 !pt-10">
+                  <DialogHeader>
+                    <DialogTitle></DialogTitle>
+                    <DialogDescription>
+                      <iframe
+                        width="100%"
+                        height="561"
+                        src={`https://www.youtube.com/embed/${Trailer[0]?.key}?si=NXkb2gZ874rf5N7A`}
+                        title="YouTube video player"
+                        style={{ borderRadius: 8 }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      ></iframe>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+
               <p className="text-[16px] text-white">Play trailer</p>
               <p className="text-[14px] text-white">2:35</p>
             </div>

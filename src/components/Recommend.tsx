@@ -46,12 +46,12 @@ export const Recommend = () => {
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
-  console.log(nowPlayingMovieData, "recommend");
+  // console.log(nowPlayingMovieData, "recommend");w
 
   return (
     <div className="w-full flex flex-col gap-[32px] ">
       <div className="flex justify-between w-full">
-        <p className="text-[24px] font-semibold">TopRated</p>
+        <p className="text-[24px] font-semibold">More like this</p>
         <Button className="bg-transparent text-black border-none shadow-none">
           See more
           <ArrowRight />
@@ -61,7 +61,8 @@ export const Recommend = () => {
       <div className="flex flex-wrap gap-[32px] ">
         {nowPlayingMovieData.slice(0, 5).map((value, index) => (
           <MovieCard
-            className="!w-[190px] !min-h-[372px]  "
+            isSmall={false}
+            className="!w-[190px] min-h-[372px]   "
             onClick={() => handleOnclick(value.id)}
             key={index}
             title={value.title}
