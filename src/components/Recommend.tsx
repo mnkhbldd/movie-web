@@ -61,7 +61,7 @@ export const Recommend = () => {
       <div className="flex flex-wrap gap-[32px] ">
         {nowPlayingMovieData.slice(0, 5).map((value, index) => (
           <MovieCard
-            isSmall={false}
+            isSmall={true}
             className="!w-[190px] min-h-[372px]   "
             onClick={() => handleOnclick(value.id)}
             key={index}

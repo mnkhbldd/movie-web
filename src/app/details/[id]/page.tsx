@@ -36,9 +36,10 @@ type MovieTypes = {
   vote_average: number;
   vote_count: number;
   genres: { id: number; name: string }[];
+  runtime: number;
 };
 
-type TrainerTypes = {
+type TrailerTypes = {
   iso_639_1: string;
   iso_3166_1: string;
   name: string;
@@ -55,7 +56,13 @@ function Detail() {
   const params = useParams();
 
   const [Similiar, setSimiliar] = useState<MovieTypes | null>(null);
-  const [Trailer, setTrailer] = useState<TrainerTypes[]>([]);
+  const [Trailer, setTrailer] = useState<TrailerTypes[]>([]);
+
+  const minute = Similiar?.runtime ?? 0;
+
+  const hours = Math.floor(minute / 60);
+
+  const remainingminute = minute % 60;
 
   const router = useRouter();
 
@@ -92,7 +99,7 @@ function Detail() {
               {Similiar?.title}
             </p>
             <p className="text-[18px] text-black font-normal">
-              {Similiar?.release_date} PG 2h 40m
+              {Similiar?.release_date} PG {hours}h {remainingminute}m
             </p>
           </div>
           <div>

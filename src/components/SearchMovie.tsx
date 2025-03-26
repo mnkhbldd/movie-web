@@ -32,6 +32,7 @@ export const SearchMovie = ({ inputValue }: { inputValue: string }) => {
 
   const handleOnclick = (id: number) => {
     router.push(`/details/${id}`);
+    setmovieGenres([]);
   };
 
   useEffect(() => {
