@@ -59,6 +59,7 @@ export const Upcoming = () => {
         {" "}
         {nowPlayingMovieData.slice(0, 10).map((value, index) => (
           <MovieCard
+            isSmall={false}
             className=""
             onClick={() => handleOnclick(value.id)}
             key={index}

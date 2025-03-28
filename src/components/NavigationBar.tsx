@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import * as dropdownMenu from "@/components/ui/dropdown-menu";
 
 import { Badge } from "@/components/ui/badge";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useActionState, useEffect, useState } from "react";
 import axios from "axios";
 
 import {
@@ -15,7 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "./ui/input";
-import { ArrowDown, ArrowRight, Moon, Search } from "lucide-react";
+import { ArrowDown, ArrowRight, Moon, Search, X } from "lucide-react";
 import { SearchMovie } from "./SearchMovie";
 import { Separator } from "./ui/separator";
 import { useRouter } from "next/navigation";
@@ -30,11 +30,17 @@ export const NavigationBar = () => {
 
   const [inputValue, setInputValue] = useState<string>("");
 
+  const [isClicked, setIsClicked] = useState<number | null>(null);
+
   const handleInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const router = useRouter();
+
+  const handleOnclick = (id: number) => {
+    router.push(`/genres?genres=${id}&page=1`);
+  };
 
   useEffect(() => {
     axios
@@ -84,8 +90,21 @@ export const NavigationBar = () => {
               <dropdownMenu.DropdownMenuSeparator />
               <div className="flex gap-4 pt-4 w-full flex-wrap">
                 {movieGenres.map((value) => (
-                  <Badge key={value.id} variant="outline">
-                    {value.name} <ArrowRight />{" "}
+                  <Badge
+                    onClick={() => {
+                      setIsClicked(value.id);
+                      handleOnclick(value.id);
+                    }}
+                    key={value.id}
+                    variant="outline"
+                    className={
+                      isClicked === value.id
+                        ? "bg-black text-white"
+                        : "bg-white text-black"
+                    }
+                  >
+                    {value.name}{" "}
+                    {isClicked === value.id ? <X /> : <ArrowRight />}
                   </Badge>
                 ))}
               </div>
@@ -100,7 +119,7 @@ export const NavigationBar = () => {
               className="border-none shadow-none p-0 h-[20px] outline-none focus:ring-0"
             />
           </div>
-          <div className="flex flex-col h-fit w-fit absolute top-[100px] z-40 p-3 bg-white rounded-[8px]">
+          <div className="flex flex-col h-fit w-fit absolute top-[100px] z-40 bg-white rounded-[8px]">
             <SearchMovie inputValue={inputValue} />
           </div>
         </div>
