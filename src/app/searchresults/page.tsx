@@ -139,25 +139,27 @@ function SearchResults() {
                 poster_path={movie.poster_path}
               />
             ))}
-            <Pagination className="flex justify-end">
-              <PaginationContent>
-                <PaginationItem onClick={handlePreviousPage}>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                {movies.map(
-                  (_, index) =>
-                    index < 3 && (
-                      <PaginationItem key={index} onClick={handleNextPage}>
-                        <PaginationLink href="#">{index + 1}</PaginationLink>
-                      </PaginationItem>
-                    )
-                )}
-                <PaginationEllipsis />
-                <PaginationItem onClick={handleNextPage}>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            {movies.length > 0 && (
+              <Pagination className="flex justify-end">
+                <PaginationContent>
+                  <PaginationItem onClick={handlePreviousPage}>
+                    <PaginationPrevious href="#" />
+                  </PaginationItem>
+                  {movies.map(
+                    (_, index) =>
+                      index < 3 && (
+                        <PaginationItem key={index} onClick={handleNextPage}>
+                          <PaginationLink href="#">{index + 1}</PaginationLink>
+                        </PaginationItem>
+                      )
+                  )}
+                  <PaginationEllipsis />
+                  <PaginationItem onClick={handleNextPage}>
+                    <PaginationNext href="#" />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </div>
         </div>
       </div>

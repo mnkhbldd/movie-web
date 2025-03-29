@@ -133,7 +133,7 @@ function Genres() {
               "Unknown Genre"}
             "
           </p>
-          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit justify-between">
+          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit just">
             {" "}
             {moviesByGenre.slice(0, 12).map((value, index) => (
               <MovieCard
