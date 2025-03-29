@@ -42,6 +42,10 @@ export const NavigationBar = () => {
     router.push(`/genres?genres=${id}&page=1`);
   };
 
+  const clearSearchInput = () => {
+    setInputValue("");
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -120,7 +124,10 @@ export const NavigationBar = () => {
             />
           </div>
           <div className="flex flex-col h-fit w-fit absolute top-[100px] z-40 bg-white rounded-[8px]">
-            <SearchMovie inputValue={inputValue} />
+            <SearchMovie
+              inputValue={inputValue}
+              clearSearchInput={clearSearchInput}
+            />
           </div>
         </div>
 
