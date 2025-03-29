@@ -88,8 +88,6 @@ function Detail() {
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
-  console.log(Trailer);
-
   return (
     <div className="w-screen flex flex-col items-center py-[52px]">
       <div className="flex flex-col gap-[32px] w-[1080px]">

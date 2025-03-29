@@ -46,8 +46,6 @@ export const Recommend = () => {
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
-  // console.log(nowPlayingMovieData, "recommend");w
-
   return (
     <div className="w-full flex flex-col gap-[32px] ">
       <div className="flex justify-between w-full">

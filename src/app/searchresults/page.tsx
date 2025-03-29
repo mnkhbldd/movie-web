@@ -87,6 +87,8 @@ function SearchResults() {
       .catch((err) => console.error("Error fetching genres:", err));
   }, []);
 
+ 
+
   return (
     <div className="flex flex-col gap-10 px-4">
       <p className="text-3xl font-semibold text-black">Search Results</p>
@@ -127,7 +129,7 @@ function SearchResults() {
           <p className="text-2xl font-semibold text-black">
             {movies.length} results for "{searchQuery}"
           </p>
-          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit">
+          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit justify-between">
             {movies.slice(0, 12).map((movie, index) => (
               <MovieCard
                 isSmall={false}

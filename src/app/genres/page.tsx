@@ -88,8 +88,6 @@ function Genres() {
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 
-  console.log(movieGenres);
-
   return (
     <div className="flex gap-[32px] flex-col px-4">
       <p className="text-[30px] font-semibold text-black">Search filter</p>
@@ -133,7 +131,7 @@ function Genres() {
               "Unknown Genre"}
             "
           </p>
-          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit just">
+          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit just justify-between">
             {" "}
             {moviesByGenre.slice(0, 12).map((value, index) => (
               <MovieCard
