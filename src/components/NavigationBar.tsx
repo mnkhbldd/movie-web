@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { ArrowDown, ArrowRight, Moon, Search, SunIcon, X } from "lucide-react";
+import { ArrowDown, ArrowRight, Moon, Search, X } from "lucide-react";
 import { SearchMovie } from "./SearchMovie";
 
 import { useRouter } from "next/navigation";
@@ -24,13 +24,6 @@ export const NavigationBar = () => {
   const [inputValue, setInputValue] = useState<string>("");
 
   const [isClicked, setIsClicked] = useState<number | null>(null);
-
-  const [isDay, setIsDay] = useState(false);
-
-  const handleOnIsday = () => {
-    setIsDay(!isDay);
-    console.log(isDay);
-  };
 
   const handleInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -57,11 +50,7 @@ export const NavigationBar = () => {
 
   return (
     <div className="flex h-[59px] w-full">
-      <div
-        className={`flex items-center px-4 justify-between w-full ${
-          isDay ? "bg-black" : "bg-white"
-        } `}
-      >
+      <div className="flex items-center px-4 justify-between w-full">
         <div
           className="flex gap-2 items-center cursor-pointer"
           onClick={() => router.push("/")}
@@ -135,13 +124,8 @@ export const NavigationBar = () => {
           </div>
         </div>
 
-        <div
-          className={`${
-            isDay ? "bg-black" : "null"
-          } border w-[36px] h-[36px] flex items-center justify-center rounded-[10px]`}
-          onClick={handleOnIsday}
-        >
-          {isDay ? <SunIcon className="text-white bg-black" /> : <Moon />}
+        <div className="border w-[36px] h-[36px] flex items-center justify-center rounded-[10px]">
+          <Moon className="stroke-1" />
         </div>
       </div>
     </div>

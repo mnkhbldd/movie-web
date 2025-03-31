@@ -49,6 +49,8 @@ function Genres() {
   const [moviesByGenre, setMoviesByGenre] = useState<MovieTypes[]>([]);
   const [movieGenres, setmovieGenres] = useState<movieGenresType[]>([]);
 
+  console.log(genres);
+
   const router = useRouter();
   const [isClicked, setIsClicked] = useState<number | null>(null);
 

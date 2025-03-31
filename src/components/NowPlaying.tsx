@@ -13,6 +13,7 @@ import { PlayIcon, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { axiosInstance } from "@/lib/utils";
 
 type MovieTypes = {
   adult: boolean;

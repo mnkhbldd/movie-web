@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { Separator } from "./ui/separator";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { axiosInstance } from "@/lib/utils";
 
 type Credits = {
   adult: boolean;

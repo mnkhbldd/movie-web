@@ -2,11 +2,12 @@
 
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "./ui/button";
-import Image from "next/image";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { MovieCard } from "./MovieCard";
 import { useRouter } from "next/navigation";
+import { axiosInstance } from "@/lib/utils";
 
 type MovieTypes = {
   adult: boolean;
@@ -49,7 +50,10 @@ export const Popular = () => {
     <div className="w-full flex flex-col gap-[32px] px-[80px]">
       <div className="flex justify-between w-full">
         <p className="text-[24px] font-semibold">Popular</p>
-        <Button className="bg-transparent text-black border-none shadow-none">
+        <Button
+          onClick={() => router.push("/similar?category=popular&page=1")}
+          className="bg-transparent text-black border-none shadow-none"
+        >
           See more
           <ArrowRight />
         </Button>

@@ -75,7 +75,6 @@ function Detail() {
       .get(
         `https://api.themoviedb.org/3/movie/${params.id}?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
-      .then((res) => setSimiliar(res.data || null))
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
 

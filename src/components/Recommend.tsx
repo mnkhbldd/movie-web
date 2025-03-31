@@ -37,6 +37,8 @@ export const Recommend = () => {
     router.push(`/details/${id}`);
   };
 
+  console.log(params.id, "paramsid");
+
   useEffect(() => {
     axios
       .get(
