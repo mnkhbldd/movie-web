@@ -41,7 +41,7 @@ export const MovieCard = ({
         </div>
         {isSmall ? (
           <p className="text-[18px]">
-            {title.length > 43 ? title.slice(0, 33) + "..." : title}
+            {title.length > 43 ? title.slice(0, 40) + "..." : title}
           </p>
         ) : (
           <p className="text-[18px]">

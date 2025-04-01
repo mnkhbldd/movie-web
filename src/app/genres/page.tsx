@@ -62,15 +62,7 @@ function Genres() {
     router.push(`/genres?genres=${id}&page=1`);
   };
 
-  const [pageNumber, setPageNumer] = useState(1);
-
-  const nextPage = () => {
-    setPageNumer(pageNumber + 1);
-  };
-
-  const previousPage = () => {
-    setPageNumer(pageNumber - 1);
-  };
+  const [pageNumber, setPageNumer] = useState(page);
 
   useEffect(() => {
     axios
@@ -91,7 +83,7 @@ function Genres() {
   }, []);
 
   return (
-    <div className="flex gap-[32px] flex-col px-4">
+    <div className="flex gap-[32px] flex-col px-24">
       <p className="text-[30px] font-semibold text-black">Search filter</p>
       <div className="flex items-start">
         <div>
@@ -133,7 +125,7 @@ function Genres() {
               "Unknown Genre"}
             "
           </p>
-          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit just justify-between">
+          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit just ">
             {" "}
             {moviesByGenre.slice(0, 12).map((value, index) => (
               <MovieCard
@@ -148,20 +140,32 @@ function Genres() {
             ))}
             <Pagination className="flex justify-end">
               <PaginationContent>
-                <PaginationItem onClick={previousPage}>
-                  <PaginationPrevious href="#" />
+                <PaginationItem>
+                  <PaginationPrevious
+                    href={`?genres=${genres}&page=${Number(pageNumber) - 1}`}
+                  />
                 </PaginationItem>
-                {moviesByGenre.map(
-                  (_, index) =>
-                    index < 3 && (
-                      <PaginationItem key={index} onClick={nextPage}>
-                        <PaginationLink href="#">{index + 1}</PaginationLink>
-                      </PaginationItem>
-                    )
-                )}
-                <PaginationEllipsis />
-                <PaginationItem onClick={nextPage}>
-                  <PaginationNext href="#" />
+
+                {moviesByGenre.map((value, index) => (
+                  <div key={index}>
+                    <PaginationItem>
+                      <PaginationLink
+                        isActive={Number(pageNumber) === index + 1}
+                        href={`?genres=${genres}&page=${index + 1}`}
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  </div>
+                ))}
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+
+                <PaginationItem>
+                  <PaginationNext
+                    href={`?genres=${genres}&page=${Number(pageNumber) + 1}`}
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

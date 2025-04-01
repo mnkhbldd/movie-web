@@ -36,6 +36,10 @@ export const Upcoming = () => {
     router.push(`/details/${id}`);
   };
 
+  const handleOnclick2 = (movieType: string) => {
+    router.push(`/similiar/${movieType}`);
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -46,21 +50,24 @@ export const Upcoming = () => {
   }, []);
 
   return (
-    <div className="w-full flex flex-col gap-[32px] px-[80px]">
+    <div className="w-full flex flex-col gap-[32px] px-[80px] max-lg:px-[20px]">
       <div className="flex justify-between w-full">
         <p className="text-[24px] font-semibold">Upcoming</p>
-        <Button className="bg-transparent text-black border-none shadow-none">
+        <Button
+          className="bg-transparent text-black border-none shadow-none"
+          onClick={() => handleOnclick2("upcoming")}
+        >
           See more
           <ArrowRight />
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-[32px]">
+      <div className="flex flex-wrap gap-[32px] max-lg:gap-5">
         {" "}
         {nowPlayingMovieData.slice(0, 10).map((value, index) => (
           <MovieCard
             isSmall={false}
-            className=""
+            className="max-lg:w-[185px] max-lg:h-[309px]"
             onClick={() => handleOnclick(value.id)}
             key={index}
             title={value.title}

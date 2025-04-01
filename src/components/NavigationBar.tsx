@@ -71,42 +71,44 @@ export const NavigationBar = () => {
           </svg>
           <p className="text-[16px] text-[#4338CA] font-bold">Movie Z</p>
         </div>
-        <div className="flex gap-3 items-center">
-          <dropdownMenu.DropdownMenu>
-            <dropdownMenu.DropdownMenuTrigger className="bg-white text-black text-[14px] rounded-[6px] font-medium flex items-center gap-2 border px-4 py-2">
-              <ArrowDown />
-              Genre
-            </dropdownMenu.DropdownMenuTrigger>
-            <dropdownMenu.DropdownMenuContent className="w-[577px] p-10">
-              <dropdownMenu.DropdownMenuLabel className="text-[24px] font-semibold">
-                Genres
-              </dropdownMenu.DropdownMenuLabel>
-              <dropdownMenu.DropdownMenuLabel className="text-[16px] font-normal">
-                See lists of movies by genre
-              </dropdownMenu.DropdownMenuLabel>
-              <dropdownMenu.DropdownMenuSeparator />
-              <div className="flex gap-4 pt-4 w-full flex-wrap">
-                {movieGenres.map((value) => (
-                  <Badge
-                    onClick={() => {
-                      setIsClicked(value.id);
-                      handleOnclick(value.id);
-                    }}
-                    key={value.id}
-                    variant="outline"
-                    className={
-                      isClicked === value.id
-                        ? "bg-black text-white"
-                        : "bg-white text-black"
-                    }
-                  >
-                    {value.name}{" "}
-                    {isClicked === value.id ? <X /> : <ArrowRight />}
-                  </Badge>
-                ))}
-              </div>
-            </dropdownMenu.DropdownMenuContent>
-          </dropdownMenu.DropdownMenu>
+        <div className="flex gap-3 items-center ">
+          <div className="max-lg:hidden">
+            <dropdownMenu.DropdownMenu>
+              <dropdownMenu.DropdownMenuTrigger className="bg-white text-black text-[14px] rounded-[6px] font-medium flex items-center gap-2 border px-4 py-2">
+                <ArrowDown />
+                Genre
+              </dropdownMenu.DropdownMenuTrigger>
+              <dropdownMenu.DropdownMenuContent className="w-[577px] p-10">
+                <dropdownMenu.DropdownMenuLabel className="text-[24px] font-semibold">
+                  Genres
+                </dropdownMenu.DropdownMenuLabel>
+                <dropdownMenu.DropdownMenuLabel className="text-[16px] font-normal">
+                  See lists of movies by genre
+                </dropdownMenu.DropdownMenuLabel>
+                <dropdownMenu.DropdownMenuSeparator />
+                <div className="flex gap-4 pt-4 w-full flex-wrap">
+                  {movieGenres.map((value) => (
+                    <Badge
+                      onClick={() => {
+                        setIsClicked(value.id);
+                        handleOnclick(value.id);
+                      }}
+                      key={value.id}
+                      variant="outline"
+                      className={
+                        isClicked === value.id
+                          ? "bg-black text-white"
+                          : "bg-white text-black"
+                      }
+                    >
+                      {value.name}{" "}
+                      {isClicked === value.id ? <X /> : <ArrowRight />}
+                    </Badge>
+                  ))}
+                </div>
+              </dropdownMenu.DropdownMenuContent>
+            </dropdownMenu.DropdownMenu>
+          </div>
 
           <div className="flex items-center px-3 py-2 border rounded-[8px] w-[355px] gap-2.5 focus:border-pink-600 focus:ring-0 ">
             <Search className="stroke-1" />

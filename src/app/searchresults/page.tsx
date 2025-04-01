@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { ArrowRight, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   Pagination,
@@ -42,6 +42,7 @@ type Genre = {
 };
 
 function SearchResults() {
+  const params = useParams();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search");
   const pageNumber = searchParams.get("page");
@@ -87,10 +88,8 @@ function SearchResults() {
       .catch((err) => console.error("Error fetching genres:", err));
   }, []);
 
- 
-
   return (
-    <div className="flex flex-col gap-10 px-4">
+    <div className="flex flex-col gap-10 px-24">
       <p className="text-3xl font-semibold text-black">Search Results</p>
       <div className="flex items-start">
         <div>
@@ -129,7 +128,7 @@ function SearchResults() {
           <p className="text-2xl font-semibold text-black">
             {movies.length} results for "{searchQuery}"
           </p>
-          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit justify-between">
+          <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit ">
             {movies.slice(0, 12).map((movie, index) => (
               <MovieCard
                 isSmall={false}
@@ -141,27 +140,42 @@ function SearchResults() {
                 poster_path={movie.poster_path}
               />
             ))}
-            {movies.length > 0 && (
-              <Pagination className="flex justify-end">
-                <PaginationContent>
-                  <PaginationItem onClick={handlePreviousPage}>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  {movies.map(
-                    (_, index) =>
-                      index < 3 && (
-                        <PaginationItem key={index} onClick={handleNextPage}>
-                          <PaginationLink href="#">{index + 1}</PaginationLink>
-                        </PaginationItem>
-                      )
-                  )}
+            <Pagination className="flex justify-end">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href={`searchresults?search=${searchQuery}&page=${
+                      currentPage - 1
+                    }`}
+                  />
+                </PaginationItem>
+
+                {movies.map((_, index) => {
+                  return (
+                    <PaginationItem key={index}>
+                      <PaginationLink
+                        isActive={currentPage == index + 1}
+                        href={`searchresults?search=${searchQuery}&page=${
+                          index + 1
+                        }`}
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+                <PaginationItem>
                   <PaginationEllipsis />
-                  <PaginationItem onClick={handleNextPage}>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    href={`searchresults?search=${searchQuery}&page=${
+                      currentPage + 1
+                    }`}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
       </div>

@@ -37,6 +37,10 @@ export const Popular = () => {
     router.push(`/details/${id}`);
   };
 
+  const handleOnclick2 = (movieType: string) => {
+    router.push(`/similiar/${movieType}`);
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -47,11 +51,11 @@ export const Popular = () => {
   }, []);
 
   return (
-    <div className="w-full flex flex-col gap-[32px] px-[80px]">
+    <div className="w-full flex flex-col gap-[32px] px-[80px] max-lg:px-[20px]">
       <div className="flex justify-between w-full">
         <p className="text-[24px] font-semibold">Popular</p>
         <Button
-          onClick={() => router.push("/similar?category=popular&page=1")}
+          onClick={() => handleOnclick2("popular")}
           className="bg-transparent text-black border-none shadow-none"
         >
           See more
@@ -59,12 +63,12 @@ export const Popular = () => {
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-[32px]">
+      <div className="flex flex-wrap gap-[32px] max-lg:gap-5">
         {" "}
         {nowPlayingMovieData.slice(0, 10).map((value, index) => (
           <MovieCard
             isSmall={false}
-            className=""
+            className="max-lg:w-[185px] max-lg:h-[309px]"
             onClick={() => handleOnclick(value.id)}
             key={index}
             title={value.title}
