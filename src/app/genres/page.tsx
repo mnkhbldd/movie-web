@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { ArrowRight, X } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   Pagination,
@@ -17,7 +17,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-type MovieTypes = {
+type MovieType = {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -36,51 +36,54 @@ type MovieTypes = {
   runtime: number;
 };
 
-type movieGenresType = {
+type MovieGenreType = {
   id: number;
   name: string;
 };
 
 function Genres() {
   const searchParams = useSearchParams();
-
-  const genres = searchParams.get("genres");
-  const page = searchParams.get("page");
-  const [moviesByGenre, setMoviesByGenre] = useState<MovieTypes[]>([]);
-  const [movieGenres, setmovieGenres] = useState<movieGenresType[]>([]);
-
-  console.log(genres);
-
   const router = useRouter();
-  const [isClicked, setIsClicked] = useState<number | null>(null);
-
-  const handleOnclick = (id: string) => {
-    router.push(`/details/${id}`);
-  };
-
-  const handleButtonClick = (id: number) => {
-    router.push(`/genres?genres=${id}&page=1`);
-  };
-
-  const [pageNumber, setPageNumer] = useState(page);
+  const [movies, setMovies] = useState<MovieType[]>([]);
+  const [movieGenres, setMovieGenres] = useState<MovieGenreType[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${genres}&page=${pageNumber}&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
+        `https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${selectedGenres.join(
+          ","
+        )}&page=${pageNumber}&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
       )
-      .then((res) => setMoviesByGenre(res.data.results || null))
+      .then((res) => setMovies(res.data.results || []))
       .catch((err) => console.error("Error fetching movies:", err));
-  }, [genres, pageNumber]);
+  }, [selectedGenres, pageNumber]);
 
   useEffect(() => {
     axios
       .get(
         "https://api.themoviedb.org/3/genre/movie/list?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
       )
-      .then((res) => setmovieGenres(res.data.genres || []))
+      .then((res) => setMovieGenres(res.data.genres || []))
       .catch((err) => console.error("Error fetching movies:", err));
   }, []);
+
+  const handleBadgeClick = (genreId: number) => {
+    const isSelected = selectedGenres.includes(genreId);
+    if (isSelected) {
+      setSelectedGenres(selectedGenres.filter((id) => id !== genreId));
+    } else {
+      setSelectedGenres([...selectedGenres, genreId]);
+    }
+    router.push(
+      `/genres?genres=${selectedGenres.join(",")}&page=${pageNumber}`
+    );
+  };
+
+  const handleOnclick = (id: string) => {
+    router.push(`/details/${id}`);
+  };
 
   return (
     <div className="flex gap-[32px] flex-col px-24">
@@ -97,19 +100,17 @@ function Genres() {
             <div className="flex gap-4 flex-wrap">
               {movieGenres.map((value) => (
                 <Badge
-                  onClick={() => {
-                    setIsClicked(value.id);
-                    handleButtonClick(value.id);
-                  }}
+                  onClick={() => handleBadgeClick(value.id)}
                   key={value.id}
                   variant="outline"
                   className={
-                    isClicked === value.id
+                    selectedGenres.includes(value.id)
                       ? "bg-black text-white"
                       : "bg-white text-black"
                   }
                 >
-                  {value.name} {isClicked === value.id ? <X /> : <ArrowRight />}
+                  {value.name}{" "}
+                  {selectedGenres.includes(value.id) ? <X /> : <ArrowRight />}
                 </Badge>
               ))}
             </div>
@@ -120,14 +121,16 @@ function Genres() {
         <div>
           {" "}
           <p className="text-[24px] font-semibold text-black">
-            {moviesByGenre.length} titles in "
-            {movieGenres.find((g) => g.id.toString() === genres)?.name ||
-              "Unknown Genre"}
+            {movies.length} titles in "
+            {movieGenres
+              .filter((g) => selectedGenres.includes(g.id))
+              .map((g) => g.name)
+              .join(", ") || "Unknown Genre"}
             "
           </p>
           <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit just ">
             {" "}
-            {moviesByGenre.slice(0, 12).map((value, index) => (
+            {movies.slice(0, 12).map((value, index) => (
               <MovieCard
                 isSmall={false}
                 className=""
@@ -142,16 +145,20 @@ function Genres() {
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href={`?genres=${genres}&page=${Number(pageNumber) - 1}`}
+                    href={`?genres=${selectedGenres.join(",")}&page=${
+                      pageNumber - 1
+                    }`}
                   />
                 </PaginationItem>
 
-                {moviesByGenre.map((value, index) => (
+                {movies.map((value, index) => (
                   <div key={index}>
                     <PaginationItem>
                       <PaginationLink
-                        isActive={Number(pageNumber) === index + 1}
-                        href={`?genres=${genres}&page=${index + 1}`}
+                        isActive={pageNumber === index + 1}
+                        href={`?genres=${selectedGenres.join(",")}&page=${
+                          index + 1
+                        }`}
                       >
                         {index + 1}
                       </PaginationLink>
@@ -164,7 +171,9 @@ function Genres() {
 
                 <PaginationItem>
                   <PaginationNext
-                    href={`?genres=${genres}&page=${Number(pageNumber) + 1}`}
+                    href={`?genres=${selectedGenres.join(",")}&page=${
+                      pageNumber + 1
+                    }`}
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -177,5 +186,3 @@ function Genres() {
 }
 
 export default Genres;
-
-//https://api.themoviedb.org/3/discover/movie?language=en&with_genres=28&page=1
