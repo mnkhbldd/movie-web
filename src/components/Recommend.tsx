@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { MovieCard } from "./MovieCard";
 import { useParams, useRouter } from "next/navigation";
+import { axiosInstance } from "@/lib/utils";
 
-type MovieTypes = {
+type MovieType = {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -26,48 +27,45 @@ type MovieTypes = {
 };
 
 export const Recommend = () => {
-  const [nowPlayingMovieData, setNowPlayingMovieData] = useState<MovieTypes[]>(
-    []
-  );
-  const params = useParams();
-
+  const [movies, setMovies] = useState<MovieType[]>([]);
+  const { id } = useParams();
   const router = useRouter();
 
-  const handleOnclick = (id: string) => {
-    router.push(`/details/${id}`);
+  const handleMovieClick = (movieId: string) => {
+    router.push(`/details/${movieId}`);
   };
 
-  console.log(params.id, "paramsid");
+  const fetchRecommendMovies = async () => {
+    const { data } = await axiosInstance.get(
+      `/movie/${id}/similar?language=en-US&page=1`
+    );
+    setMovies(data.results);
+  };
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${params.id}/similar?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
-      .then((res) => setNowPlayingMovieData(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
-  }, []);
+    fetchRecommendMovies();
+  }, [id]);
 
   return (
-    <div className="w-full flex flex-col gap-[32px] ">
+    <div className="w-full flex flex-col gap-10">
       <div className="flex justify-between w-full">
-        <p className="text-[24px] font-semibold">More like this</p>
+        <h2 className="text-2xl font-semibold">More like this</h2>
         <Button className="bg-transparent text-black border-none shadow-none">
           See more
           <ArrowRight />
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-[32px] ">
-        {nowPlayingMovieData.slice(0, 5).map((value, index) => (
+      <div className="flex flex-wrap gap-8">
+        {movies.slice(0, 5).map((movie, index) => (
           <MovieCard
-            isSmall={true}
-            className="!w-[190px] min-h-[372px]   "
-            onClick={() => handleOnclick(value.id)}
             key={index}
-            title={value.title}
-            vote_average={value.vote_average}
-            poster_path={value.poster_path}
+            isSmall
+            className="!w-[190px] min-h-[372px]"
+            onClick={() => handleMovieClick(movie.id)}
+            title={movie.title}
+            vote_average={movie.vote_average}
+            poster_path={movie.poster_path}
           />
         ))}
       </div>

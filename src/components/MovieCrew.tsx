@@ -43,13 +43,19 @@ export const MovieCrew = () => {
 
   const [Similiar, setSimiliar] = useState<MovieTypes | null>(null);
 
+  const fetchMovieCredits = async () => {
+    try {
+      const { data } = await axiosInstance.get(
+        `movie/${params.id}/credits?language=en-US`
+      );
+      setSimiliar(data);
+    } catch (error) {
+      console.error("Error fetching movie credits:", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${params.id}/credits?language=en-US&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
-      .then((res) => setSimiliar(res.data || null))
-      .catch((err) => console.error("Error fetching movies:", err));
+    fetchMovieCredits();
   }, []);
 
   return (

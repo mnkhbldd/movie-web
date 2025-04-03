@@ -41,13 +41,13 @@ export const Popular = () => {
     router.push(`/similiar/${movieType}`);
   };
 
+  const fetchpopularMovieData = async () => {
+    const { data } = await axiosInstance.get("/movie/popular");
+    setNowPlayingMovieData(data.results);
+  };
+
   useEffect(() => {
-    axios
-      .get(
-        "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
-      )
-      .then((res) => setNowPlayingMovieData(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
+    fetchpopularMovieData();
   }, []);
 
   return (

@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/utils";
+import { Skeleton } from "./ui/skeleton";
 
 type MovieTypes = {
   adult: boolean;
@@ -37,13 +38,13 @@ export const Nowplaying = () => {
     []
   );
 
+  const fetchNowPlayingMovies = async () => {
+    const { data } = await axiosInstance.get("/movie/now_playing");
+    setNowPlayingMovieData(data.results);
+  };
+
   useEffect(() => {
-    axios
-      .get(
-        "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
-      )
-      .then((res) => setNowPlayingMovieData(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
+    fetchNowPlayingMovies();
   }, []);
 
   return (

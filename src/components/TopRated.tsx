@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { MovieCard } from "./MovieCard";
 import { useRouter } from "next/navigation";
+import { axiosInstance } from "@/lib/utils";
 
 type MovieTypes = {
   adult: boolean;
@@ -40,13 +41,13 @@ export const TopRated = () => {
     router.push(`/similiar/${movieType}`);
   };
 
+  const fetchTopRatedMovieData = async () => {
+    const { data } = await axiosInstance.get("/movie/top_rated");
+    setNowPlayingMovieData(data.results);
+  };
+
   useEffect(() => {
-    axios
-      .get(
-        "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
-      )
-      .then((res) => setNowPlayingMovieData(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
+    fetchTopRatedMovieData();
   }, []);
 
   return (

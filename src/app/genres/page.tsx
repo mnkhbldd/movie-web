@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { ArrowRight, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,

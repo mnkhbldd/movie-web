@@ -12,6 +12,7 @@ import { ArrowDown, ArrowRight, Moon, Search, X } from "lucide-react";
 import { SearchMovie } from "./SearchMovie";
 
 import { useRouter } from "next/navigation";
+import { axiosInstance } from "@/lib/utils";
 
 type movieGenresType = {
   id: number;
@@ -39,13 +40,19 @@ export const NavigationBar = () => {
     setInputValue("");
   };
 
+  const fetchMovieGenre = async () => {
+    try {
+      const { data } = await axiosInstance.get(
+        "/genre/movie/list?language=en-US&page=1"
+      );
+      setmovieGenres(data.genres || []);
+    } catch (error) {
+      console.error("Error fetching movie genres:", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(
-        "https://api.themoviedb.org/3/genre/movie/list?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
-      )
-      .then((res) => setmovieGenres(res.data.genres || []))
-      .catch((err) => console.error("Error fetching movies:", err));
+    fetchMovieGenre();
   }, []);
 
   return (

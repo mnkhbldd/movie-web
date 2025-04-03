@@ -16,8 +16,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { axiosInstance } from "@/lib/utils";
 
-type Movie = {
+type MovieType = {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -36,22 +37,21 @@ type Movie = {
   runtime: number;
 };
 
-type Genre = {
+type GenreType = {
   id: number;
   name: string;
 };
 
-function SearchResults() {
+function SearchResultsPage() {
+  const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("search");
-  const pageNumber = searchParams.get("page");
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const search = searchParams.get("search");
+  const page = searchParams.get("page");
+  const [movies, setMovies] = useState<MovieType[]>([]);
+  const [genres, setGenres] = useState<GenreType[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(parseInt(page || "1"));
 
   const handleMovieClick = (movieId: string) => {
     router.push(`/details/${movieId}`);
@@ -62,31 +62,36 @@ function SearchResults() {
     router.push(`/genres?genres=${genreId}&page=1`);
   };
 
-  const handleNextPage = () => {
+  useEffect(() => {
+    const fetchMovieDataAsync = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `search/movie?query=${search}&language=en-US&page=${page}`
+        );
+        setMovies(data.results);
+      } catch (error) {
+        console.error("Error fetching movie credits:", error);
+      }
+    };
+
+    const fetchGenreAsync = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `genre/movie/list?language=en-US&page=1`
+        );
+        setGenres(data.genres);
+      } catch (error) {
+        console.error("Error fetching movie credits:", error);
+      }
+    };
+
+    fetchMovieDataAsync();
+    fetchGenreAsync();
+  }, [search, page]);
+
+  const nextPage = () => {
     setCurrentPage(currentPage + 1);
   };
-
-  const handlePreviousPage = () => {
-    setCurrentPage(currentPage - 1);
-  };
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&language=en-US&page=${pageNumber}&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
-      .then((res) => setMovies(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
-  }, [searchQuery, pageNumber]);
-
-  useEffect(() => {
-    axios
-      .get(
-        "https://api.themoviedb.org/3/genre/movie/list?language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289"
-      )
-      .then((res) => setGenres(res.data.genres || []))
-      .catch((err) => console.error("Error fetching genres:", err));
-  }, []);
 
   return (
     <div className="flex flex-col gap-10 px-24">
@@ -126,7 +131,7 @@ function SearchResults() {
         <div className="h-screen w-[32px]  px-10"></div>
         <div className="w-fit h-fit">
           <p className="text-2xl font-semibold text-black">
-            {movies.length} results for "{searchQuery}"
+            {movies.length} results for "{search}"
           </p>
           <div className="flex flex-wrap gap-10 py-10 max-w-[1760px] w-fit ">
             {movies.slice(0, 12).map((movie, index) => (
@@ -144,7 +149,7 @@ function SearchResults() {
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href={`searchresults?search=${searchQuery}&page=${
+                    href={`searchresults?search=${search}&page=${
                       currentPage - 1
                     }`}
                   />
@@ -154,10 +159,13 @@ function SearchResults() {
                   return (
                     <PaginationItem key={index}>
                       <PaginationLink
-                        isActive={currentPage == index + 1}
-                        href={`searchresults?search=${searchQuery}&page=${
-                          index + 1
-                        }`}
+                        isActive={currentPage === index + 1}
+                        onClick={() => {
+                          setCurrentPage(index + 1);
+                          router.push(
+                            `searchresults?search=${search}&page=${index + 1}`
+                          );
+                        }}
                       >
                         {index + 1}
                       </PaginationLink>
@@ -169,7 +177,7 @@ function SearchResults() {
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationNext
-                    href={`searchresults?search=${searchQuery}&page=${
+                    href={`searchresults?search=${search}&page=${
                       currentPage + 1
                     }`}
                   />
@@ -183,4 +191,4 @@ function SearchResults() {
   );
 }
 
-export default SearchResults;
+export default SearchResultsPage;

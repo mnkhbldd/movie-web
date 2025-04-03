@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { axiosInstance } from "@/lib/utils";
 
 type MovieTypes = {
   adult: boolean;
@@ -49,13 +50,19 @@ const SimilarPage = () => {
   console.log(searchParams);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${params.movieType}?language=en-US&page=${currentPage}&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
-      .then((res) => setMovieData(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
-  }, []);
+    const fetchMovieCredits = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `movie/${params.movieType}?language=en-US&page=${currentPage}`
+        );
+        setMovieData(data.results);
+      } catch (error) {
+        console.error("Error fetching movie credits:", error);
+      }
+    };
+
+    fetchMovieCredits();
+  }, [currentPage]);
 
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -98,7 +105,8 @@ const SimilarPage = () => {
               <PaginationItem key={index}>
                 <PaginationLink
                   isActive={currentPage == index + 1}
-                  href={`${params.movieType}?page=${currentPage}`}
+                  href={`${params.movieType}?page=${index + 1}`}
+                  onClick={() => setCurrentPage(index + 1)}
                 >
                   {index + 1}
                 </PaginationLink>

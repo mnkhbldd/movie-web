@@ -7,6 +7,7 @@ import axios from "axios";
 import Image from "next/image";
 import { Separator } from "./ui/separator";
 import { useRouter } from "next/navigation";
+import { axiosInstance } from "@/lib/utils";
 
 type Movie = {
   adult: boolean;
@@ -47,18 +48,19 @@ export const SearchMovie = ({
     clearSearchInput();
   };
 
+  const fetchMovieData = async () => {
+    const { data } = await axiosInstance.get(
+      `/search/movie?query=${inputValue}`
+    );
+    setMovies(data.results);
+  };
+
   useEffect(() => {
     if (inputValue.trim() === "") {
       setMovies([]);
       return;
     }
-
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?query=${inputValue}&language=en-US&page=1&api_key=d67d8bebd0f4ff345f6505c99e9d0289`
-      )
-      .then((res) => setMovies(res.data.results || []))
-      .catch((err) => console.error("Error fetching movies:", err));
+    fetchMovieData();
   }, [inputValue]);
 
   return (
