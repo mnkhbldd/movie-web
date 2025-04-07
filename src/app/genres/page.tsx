@@ -86,7 +86,7 @@ function Genres() {
   };
 
   return (
-    
+    <Suspense>
       <div className="flex gap-[32px] flex-col px-24">
         <p className="text-[30px] font-semibold text-black">Search filter</p>
         <div className="flex items-start">
@@ -183,6 +183,7 @@ function Genres() {
           </div>
         </div>
       </div>
+    </Suspense>
   );
 }
 

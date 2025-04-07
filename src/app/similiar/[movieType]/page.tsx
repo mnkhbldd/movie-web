@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { ArrowRight } from "lucide-react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -69,62 +69,64 @@ const SimilarPage = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-[32px] px-[80px] py-20 ">
-      <div className="flex justify-between w-full">
-        <p className="text-[24px] font-semibold">{params.movieType}</p>
-        <Button className="bg-transparent text-black border-none shadow-none">
-          See more
-          <ArrowRight />
-        </Button>
-      </div>
+    <Suspense>
+      <div className="w-full flex flex-col gap-[32px] px-[80px] py-20 ">
+        <div className="flex justify-between w-full">
+          <p className="text-[24px] font-semibold">{params.movieType}</p>
+          <Button className="bg-transparent text-black border-none shadow-none">
+            See more
+            <ArrowRight />
+          </Button>
+        </div>
 
-      <div className="flex flex-wrap gap-[32px]">
-        {" "}
-        {movieData.slice(0, 16).map((value, index) => (
-          <MovieCard
-            isSmall={false}
-            className=""
-            onClick={() => handleOnclick(value.id)}
-            key={index}
-            title={value.title}
-            vote_average={value.vote_average}
-            poster_path={value.poster_path}
-          />
-        ))}
-      </div>
-      <Pagination className="flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              href={`${params.movieType}?page=${currentPage - 1}`}
+        <div className="flex flex-wrap gap-[32px]">
+          {" "}
+          {movieData.slice(0, 16).map((value, index) => (
+            <MovieCard
+              isSmall={false}
+              className=""
+              onClick={() => handleOnclick(value.id)}
+              key={index}
+              title={value.title}
+              vote_average={value.vote_average}
+              poster_path={value.poster_path}
             />
-          </PaginationItem>
+          ))}
+        </div>
+        <Pagination className="flex justify-end">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={`${params.movieType}?page=${currentPage - 1}`}
+              />
+            </PaginationItem>
 
-          {movieData.map((value, index) => {
-            return (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  isActive={currentPage == index + 1}
-                  href={`${params.movieType}?page=${index + 1}`}
-                  onClick={() => setCurrentPage(index + 1)}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          })}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              href={`${params.movieType}?page=${currentPage}`}
-              onClick={nextPage}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </div>
+            {movieData.map((value, index) => {
+              return (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    isActive={currentPage == index + 1}
+                    href={`${params.movieType}?page=${index + 1}`}
+                    onClick={() => setCurrentPage(index + 1)}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                href={`${params.movieType}?page=${currentPage}`}
+                onClick={nextPage}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </Suspense>
   );
 };
 

@@ -7,12 +7,12 @@ export default function Home() {
   return ( 
     
     <div className="h-auto  w-full flex flex-col items-center gap-[52px] py-[52px]">
-      <React.Suspense>
+      <Suspense>
         <Nowplaying />
         <Upcoming />
         <Popular />
         <TopRated />
-      </React.Suspense>
+      <Suspense/>
      
     </div>
   );
